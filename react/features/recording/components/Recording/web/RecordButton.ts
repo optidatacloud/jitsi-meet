@@ -2,16 +2,16 @@ import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../../app/types';
 import { getToolbarButtons } from '../../../../base/config/functions.web';
-import { openDialog } from '../../../../base/dialog/actions';
 import { translate } from '../../../../base/i18n/functions';
 import AbstractRecordButton, {
     IProps,
     _mapStateToProps as _abstractMapStateToProps
 } from '../AbstractRecordButton';
 
+import { startLocalVideoRecording, stopLocalVideoRecording } from '../../../actions';
+
 import StartRecordingDialog from './StartRecordingDialog';
 import StopRecordingDialog from './StopRecordingDialog';
-
 
 /**
  * Button for opening a dialog where a recording session can be started.
@@ -28,9 +28,9 @@ class RecordingButton extends AbstractRecordButton<IProps> {
     _onHandleClick() {
         const { _isRecordingRunning, dispatch } = this.props;
 
-        dispatch(openDialog(
-            _isRecordingRunning ? StopRecordingDialog : StartRecordingDialog
-        ));
+        _isRecordingRunning
+            ? dispatch(stopLocalVideoRecording())
+            : dispatch(startLocalVideoRecording(false));
     }
 }
 
