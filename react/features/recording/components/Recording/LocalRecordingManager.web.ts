@@ -165,7 +165,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
             this.audioDestination = undefined;
             this.totalSize = MAX_SIZE;
 
-            if (this.isOnlyUi) {
+            if (!this.isOnlyUi) {
                 this.recorder.stop();
                 setTimeout(() => this.saveRecording(this.recordingData, this.getFilename()), 1000);
             }
