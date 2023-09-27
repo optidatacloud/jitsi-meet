@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../../app/types';
 import { getToolbarButtons } from '../../../../base/config/functions.web';
+import { openDialog } from '../../../../base/dialog/actions';
 import { translate } from '../../../../base/i18n/functions';
 import AbstractRecordButton, {
     IProps,
@@ -26,11 +27,19 @@ class RecordingButton extends AbstractRecordButton<IProps> {
      * @returns {void}
      */
     _onHandleClick() {
-        const { _isRecordingRunning, dispatch } = this.props;
+        const { _isRecordingRunning, _isUiOnly, dispatch } = this.props;
 
-        _isRecordingRunning
-            ? dispatch(stopLocalVideoRecording())
-            : dispatch(startLocalVideoRecording(false));
+        if (_isUiOnly) {
+            dispatch(
+                _isRecordingRunning ? stopLocalVideoRecording() : startLocalVideoRecording(false, true)
+            );
+
+            return;
+        }
+
+        dispatch(openDialog(
+            _isRecordingRunning ? StopRecordingDialog : StartRecordingDialog
+        ));
     }
 }
 

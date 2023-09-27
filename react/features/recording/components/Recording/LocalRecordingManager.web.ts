@@ -20,15 +20,16 @@ interface ILocalRecordingManager {
     audioDestination: MediaStreamAudioDestinationNode | undefined;
     getFilename: () => string;
     initializeAudioMixer: () => void;
+    isOnlyUi: boolean | undefined;
     isRecordingLocally: () => boolean;
     mediaType: string;
     mixAudioStream: (stream: MediaStream) => void;
-    recorder: MediaRecorder | undefined;
+    recorder: MediaRecorder | undefined | boolean;
     recordingData: Blob[];
     roomName: string;
     saveRecording: (recordingData: Blob[], filename: string) => void;
     selfRecording: ISelfRecording;
-    startLocalRecording: (store: IStore, onlySelf: boolean) => void;
+    startLocalRecording: (store: IStore, onlySelf: boolean, onlyUI: boolean) => void;
     stopLocalRecording: () => void;
     stream: MediaStream | undefined;
     totalSize: number;
@@ -68,6 +69,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
         on: false,
         withVideo: false
     },
+    isOnlyUi: false,
 
     get mediaType() {
         if (this.selfRecording.on && !this.selfRecording.withVideo) {
@@ -159,11 +161,16 @@ const LocalRecordingManager: ILocalRecordingManager = {
      * */
     stopLocalRecording() {
         if (this.recorder) {
-            this.recorder.stop && this.recorder.stop();
-            this.recorder = undefined;
             this.audioContext = undefined;
             this.audioDestination = undefined;
             this.totalSize = MAX_SIZE;
+
+            if (this.isOnlyUi) {
+                this.recorder.stop();
+                setTimeout(() => this.saveRecording(this.recordingData, this.getFilename()), 1000);
+            }
+
+            this.recorder = undefined;
         }
     },
 
@@ -172,9 +179,10 @@ const LocalRecordingManager: ILocalRecordingManager = {
      *
      * @param {IStore} store - The redux store.
      * @param {boolean} onlySelf - Whether to record only self streams.
+     * @param {boolean} onlyUi - Whether to record only self streams.
      * @returns {void}
      */
-    async startLocalRecording(store, onlySelf) {
+    async startLocalRecording(store, onlySelf, onlyUi) {
         const { dispatch, getState } = store;
 
         // @ts-ignore
@@ -187,8 +195,36 @@ const LocalRecordingManager: ILocalRecordingManager = {
         let gdmStream: MediaStream = new MediaStream();
         const tracks = getTrackState(getState());
 
+        this.isOnlyUi = onlyUi;
+
         if (onlySelf) {
-            throw new Error('"onlyself" recording mode is not allowed');
+            let audioTrack: MediaStreamTrack | undefined = getLocalTrack(tracks, MEDIA_TYPE.AUDIO)?.jitsiTrack?.track;
+            let videoTrack: MediaStreamTrack | undefined = getLocalTrack(tracks, MEDIA_TYPE.VIDEO)?.jitsiTrack?.track;
+
+            if (!audioTrack) {
+                APP.conference.muteAudio(false);
+                setTimeout(() => APP.conference.muteAudio(true), 100);
+                await new Promise(resolve => {
+                    setTimeout(resolve, 100);
+                });
+            }
+            if (videoTrack && videoTrack.readyState !== 'live') {
+                videoTrack = undefined;
+            }
+            audioTrack = getLocalTrack(getTrackState(getState()), MEDIA_TYPE.AUDIO)?.jitsiTrack?.track;
+            if (!audioTrack && !videoTrack) {
+                throw new Error('NoLocalStreams');
+            }
+            this.selfRecording.withVideo = Boolean(videoTrack);
+            const localTracks = [];
+
+            audioTrack && localTracks.push(audioTrack);
+            videoTrack && localTracks.push(videoTrack);
+            this.stream = new MediaStream(localTracks);
+
+        } else if (onlyUi) {
+            this.recorder = true;
+            return;
 
         } else {
             if (supportsCaptureHandle) {
@@ -219,10 +255,70 @@ const LocalRecordingManager: ILocalRecordingManager = {
 
             document.title = i18next.t('localRecording.selectTabTitle');
 
+            // @ts-ignore
+            gdmStream = await navigator.mediaDevices.getDisplayMedia({
+                video: { displaySurface: 'browser',
+                    frameRate: 30 },
+                audio: false, // @ts-ignore
+                preferCurrentTab: true
+            });
             document.title = currentTitle;
+
+            const isBrowser = gdmStream.getVideoTracks()[0].getSettings().displaySurface === 'browser';
+
+            if (!isBrowser || (supportsCaptureHandle // @ts-ignore
+                && gdmStream.getVideoTracks()[0].getCaptureHandle()?.handle !== `JitsiMeet-${tabId}`)) {
+                gdmStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+                throw new Error('WrongSurfaceSelected');
+            }
+
+            this.initializeAudioMixer();
+
+            const allTracks = getTrackState(getState());
+
+            allTracks.forEach((track: any) => {
+                if (track.mediaType === MEDIA_TYPE.AUDIO) {
+                    const audioTrack = track?.jitsiTrack?.track;
+
+                    this.addAudioTrackToLocalRecording(audioTrack);
+                }
+            });
+            this.stream = new MediaStream([
+                ...this.audioDestination?.stream.getAudioTracks() || [],
+                gdmStream.getVideoTracks()[0]
+            ]);
         }
 
-        this.recorder = true;
+        this.recorder = new MediaRecorder(this.stream, {
+            mimeType: this.mediaType,
+            videoBitsPerSecond: VIDEO_BIT_RATE
+        });
+        this.recorder.addEventListener('dataavailable', e => {
+            if (e.data && e.data.size > 0) {
+                this.recordingData.push(e.data);
+                this.totalSize -= e.data.size;
+                if (this.totalSize <= 0) {
+                    dispatch(stopLocalVideoRecording());
+                }
+            }
+        });
+
+        if (!onlySelf) {
+            this.recorder.addEventListener('stop', () => {
+                this.stream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+                gdmStream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+            });
+
+            gdmStream?.addEventListener('inactive', () => {
+                dispatch(stopLocalVideoRecording());
+            });
+
+            this.stream.addEventListener('inactive', () => {
+                dispatch(stopLocalVideoRecording());
+            });
+        }
+
+        this.recorder.start(5000);
     },
 
     /**

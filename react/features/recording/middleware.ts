@@ -130,11 +130,11 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => async action => 
 
     case START_LOCAL_RECORDING: {
         const { localRecording } = getState()['features/base/config'];
-        const { onlySelf } = action;
+        const { onlySelf, useOnlyUi } = action;
 
         try {
             await LocalRecordingManager.startLocalRecording({ dispatch,
-                getState }, action.onlySelf);
+                getState }, action.onlySelf, useOnlyUi);
             const props = {
                 descriptionKey: 'recording.on',
                 titleKey: 'dialog.recording'
