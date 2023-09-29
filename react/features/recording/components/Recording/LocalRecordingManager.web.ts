@@ -20,15 +20,16 @@ interface ILocalRecordingManager {
     audioDestination: MediaStreamAudioDestinationNode | undefined;
     getFilename: () => string;
     initializeAudioMixer: () => void;
+    isOnlyUi: boolean | undefined;
     isRecordingLocally: () => boolean;
     mediaType: string;
     mixAudioStream: (stream: MediaStream) => void;
-    recorder: MediaRecorder | undefined;
+    recorder: MediaRecorder | undefined | boolean;
     recordingData: Blob[];
     roomName: string;
     saveRecording: (recordingData: Blob[], filename: string) => void;
     selfRecording: ISelfRecording;
-    startLocalRecording: (store: IStore, onlySelf: boolean) => void;
+    startLocalRecording: (store: IStore, onlySelf: boolean, onlyUI: boolean) => void;
     stopLocalRecording: () => void;
     stream: MediaStream | undefined;
     totalSize: number;
@@ -68,6 +69,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
         on: false,
         withVideo: false
     },
+    isOnlyUi: false,
 
     get mediaType() {
         if (this.selfRecording.on && !this.selfRecording.withVideo) {
@@ -159,12 +161,16 @@ const LocalRecordingManager: ILocalRecordingManager = {
      * */
     stopLocalRecording() {
         if (this.recorder) {
-            this.recorder.stop();
-            this.recorder = undefined;
             this.audioContext = undefined;
             this.audioDestination = undefined;
             this.totalSize = MAX_SIZE;
-            setTimeout(() => this.saveRecording(this.recordingData, this.getFilename()), 1000);
+
+            if (!this.isOnlyUi) {
+                this.recorder.stop();
+                setTimeout(() => this.saveRecording(this.recordingData, this.getFilename()), 1000);
+            }
+
+            this.recorder = undefined;
         }
     },
 
@@ -173,9 +179,10 @@ const LocalRecordingManager: ILocalRecordingManager = {
      *
      * @param {IStore} store - The redux store.
      * @param {boolean} onlySelf - Whether to record only self streams.
+     * @param {boolean} onlyUi - Whether to record only self streams.
      * @returns {void}
      */
-    async startLocalRecording(store, onlySelf) {
+    async startLocalRecording(store, onlySelf, onlyUi) {
         const { dispatch, getState } = store;
 
         // @ts-ignore
@@ -187,6 +194,8 @@ const LocalRecordingManager: ILocalRecordingManager = {
         this.roomName = getRoomName(getState()) ?? '';
         let gdmStream: MediaStream = new MediaStream();
         const tracks = getTrackState(getState());
+
+        this.isOnlyUi = onlyUi;
 
         if (onlySelf) {
             let audioTrack: MediaStreamTrack | undefined = getLocalTrack(tracks, MEDIA_TYPE.AUDIO)?.jitsiTrack?.track;
@@ -212,6 +221,11 @@ const LocalRecordingManager: ILocalRecordingManager = {
             audioTrack && localTracks.push(audioTrack);
             videoTrack && localTracks.push(videoTrack);
             this.stream = new MediaStream(localTracks);
+
+        } else if (onlyUi) {
+            this.recorder = true;
+            return;
+
         } else {
             if (supportsCaptureHandle) {
                 // @ts-ignore

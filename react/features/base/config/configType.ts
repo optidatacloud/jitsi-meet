@@ -476,6 +476,7 @@ export interface IConfig {
         disable?: boolean;
         disableSelfRecording?: boolean;
         notifyAllParticipants?: boolean;
+        useOnlyUi?: boolean;
     };
     localSubject?: string;
     locationURL?: URL;

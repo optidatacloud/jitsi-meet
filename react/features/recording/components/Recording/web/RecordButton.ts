@@ -9,9 +9,10 @@ import AbstractRecordButton, {
     _mapStateToProps as _abstractMapStateToProps
 } from '../AbstractRecordButton';
 
+import { startLocalVideoRecording, stopLocalVideoRecording } from '../../../actions';
+
 import StartRecordingDialog from './StartRecordingDialog';
 import StopRecordingDialog from './StopRecordingDialog';
-
 
 /**
  * Button for opening a dialog where a recording session can be started.
@@ -26,7 +27,15 @@ class RecordingButton extends AbstractRecordButton<IProps> {
      * @returns {void}
      */
     _onHandleClick() {
-        const { _isRecordingRunning, dispatch } = this.props;
+        const { _isRecordingRunning, _isUiOnly, dispatch } = this.props;
+
+        if (_isUiOnly) {
+            dispatch(
+                _isRecordingRunning ? stopLocalVideoRecording() : startLocalVideoRecording(false, true)
+            );
+
+            return;
+        }
 
         dispatch(openDialog(
             _isRecordingRunning ? StopRecordingDialog : StartRecordingDialog

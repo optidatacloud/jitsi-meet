@@ -27,6 +27,12 @@ export interface IProps extends AbstractButtonProps {
     _isRecordingRunning: boolean;
 
     /**
+     * True if only the UI related to recording should work.
+     * No actual recording will be done.
+     */
+    _isUiOnly?: boolean;
+
+    /**
      * The tooltip to display when hovering over the button.
      */
     _tooltip?: string;
@@ -128,6 +134,7 @@ export function _mapStateToProps(state: IReduxState) {
     const {
         disabled: _disabled,
         tooltip: _tooltip,
+        isUiOnly: _isUiOnly,
         visible
     } = getRecordButtonProps(state);
 
@@ -135,6 +142,7 @@ export function _mapStateToProps(state: IReduxState) {
         _disabled,
         _isRecordingRunning: Boolean(getActiveSession(state, JitsiRecordingConstants.mode.FILE))
             || LocalRecordingManager.isRecordingLocally(),
+        _isUiOnly,
         _tooltip,
         visible
     };
