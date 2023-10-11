@@ -23,4 +23,6 @@ jobs:
       - name: Run Make
         run: make
       - name: Build .deb packages
-        run: dpkg-buildpackage -us -uc -b
+        uses: jtdor/build-deb-action@v1
+        with:
+          buildpackage-opts: -us -uc -b
