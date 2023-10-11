@@ -107,3 +107,18 @@ react-native-sdk/node_modules
 react-native-sdk/react
 react-native-sdk/service
 react-native-sdk/sounds
+
+## DEBIAN packaging files
+#
+debian/*.debhelper.log
+debian/*.debhelper
+debian/*.substvars
+debian/tmp/
+debian/files
+debian/debhelper-build-stamp
+debian/jitsi-meet-prosody
+debian/jitsi-meet-tokens
+debian/jitsi-meet-turnserver
+debian/jitsi-meet-web
+debian/jitsi-meet-web-config
+debian/artifacts
