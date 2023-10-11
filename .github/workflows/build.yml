@@ -6,6 +6,8 @@ on:
       - build*
     tags:
       - v*
+env:
+  OPTIDATA_DOWNLOADS_FOLDER: /var/www/downloads.optidata.cloud/jitsi/artifacts
 jobs:
   build-push:
     name: Build
@@ -34,14 +36,14 @@ jobs:
           username: ${{ secrets.JITSI_SERVER_USERNAME }}
           password: ${{ secrets.JITSI_SERVER_PASSWORD }}
           script: |
-            mkdir -p /home/jitsi/artifacts
-      - name: Upload .deb packages using scp
+            mkdir -p ${{ env.OPTIDATA_DOWNLOADS_FOLDER }}
+      - name: Upload .deb packages
         uses: garygrossgarten/github-action-scp@release
         with:
           host: ${{ secrets.JITSI_SERVER_HOST }}
           username: ${{ secrets.JITSI_SERVER_USERNAME }}
           password: ${{ secrets.JITSI_SERVER_PASSWORD }}
           local: debian/artifacts
-          remote: /home/jitsi/artifacts
+          remote: ${{ env.OPTIDATA_DOWNLOADS_FOLDER }}
 
 
