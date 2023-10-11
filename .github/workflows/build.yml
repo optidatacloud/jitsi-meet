@@ -13,14 +13,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'npm'
-      - name: Npm install
-        run: npm install
-      - name: Run Make
-        run: make
+    #   - name: Setup Node.js
+    #     uses: actions/setup-node@v3
+    #     with:
+    #       node-version: 16
+    #       cache: 'npm'
+    #   - name: Npm install
+    #     run: npm install
+    #   - name: Run Make
+    #     run: make
       - name: Build .deb packages
-        run: dpkg-buildpackage -us -uc -b
+        uses: jtdor/build-deb-action@v1
+        with:
+          buildpackage-opts: -us -uc -b
+          artifacts-dir: debian/artifacts
+      - name: Prepare download folder
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.JITSI_SERVER_HOST }}
+          username: ${{ secrets.JITSI_SERVER_USERNAME }}
+          password: ${{ secrets.JITSI_SERVER_PASSWORD }}
+          script: |
+            mkdir -p /home/jitsi/artifacts
+      - name: Upload .deb packages using scp
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          host: ${{ secrets.JITSI_SERVER_HOST }}
+          username: ${{ secrets.JITSI_SERVER_USERNAME }}
+          password: ${{ secrets.JITSI_SERVER_PASSWORD }}
+          local: debian/artifacts
+          remote: /home/jitsi/artifacts
+
+
