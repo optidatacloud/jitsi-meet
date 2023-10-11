@@ -1,0 +1,26 @@
+name: Build .deb packages
+on:
+  push:
+    branches:
+      - master
+      - build*
+    tags:
+      - v*
+jobs:
+  build-push:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: Npm install
+        run: npm install
+      - name: Run Make
+        run: make
+      - name: Build .deb packages
+        run: dpkg-buildpackage -us -uc -b
