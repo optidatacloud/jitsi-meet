@@ -44,7 +44,6 @@ jobs:
           host: ${{ secrets.JITSI_SERVER_HOST }}
           username: ${{ secrets.JITSI_SERVER_USERNAME }}
           password: ${{ secrets.JITSI_SERVER_PASSWORD }}
-          port: ${{ secrets.JITSI_SERVER_PORT }}
           local: debian/artifacts
           remote: ${{ env.JITSI_ARTIFACTS_FOLDER }}
 
