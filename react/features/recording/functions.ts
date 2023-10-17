@@ -191,10 +191,13 @@ export function getRecordButtonProps(state: IReduxState) {
         visible = false;
     }
 
+    const isUiOnly = Boolean(localRecording?.useOnlyUi);
+
     return {
         disabled,
         tooltip,
-        visible
+        visible,
+        isUiOnly
     };
 }
 
