@@ -24,7 +24,7 @@ interface ILocalRecordingManager {
     isRecordingLocally: () => boolean;
     mediaType: string;
     mixAudioStream: (stream: MediaStream) => void;
-    recorder: MediaRecorder | undefined | boolean;
+    recorder: any;
     recordingData: Blob[];
     roomName: string;
     saveRecording: (recordingData: Blob[], filename: string) => void;
