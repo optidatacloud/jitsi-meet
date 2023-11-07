@@ -293,7 +293,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
             mimeType: this.mediaType,
             videoBitsPerSecond: VIDEO_BIT_RATE
         });
-        this.recorder.addEventListener('dataavailable', e => {
+        this.recorder.addEventListener('dataavailable', (e: any) => {
             if (e.data && e.data.size > 0) {
                 this.recordingData.push(e.data);
                 this.totalSize -= e.data.size;
