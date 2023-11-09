@@ -8,7 +8,7 @@ on:
       - v*
 env:
   JITSI_ARTIFACTS_FOLDER: /var/www/downloads.optidata.cloud/jitsi/artifacts
-  OPTIDATA_DOWNLOADS_HOST: downloads.optidata.cloud
+  OPTIDATA_DOWNLOADS_HOST: 209.14.141.164
 jobs:
   build-push:
     name: Build
@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.OPTIDATA_DOWNLOADS_USERNAME }}
           password: ${{ secrets.OPTIDATA_DOWNLOADS_PASSWORD }}
           port: ${{ secrets.OPTIDATA_DOWNLOADS_PORT }}
-          script: whoami && mkdir -p ${{ env.JITSI_ARTIFACTS_FOLDER }}
+          script: whoami
       - name: Upload .deb packages
         uses: garygrossgarten/github-action-scp@release
         with:
