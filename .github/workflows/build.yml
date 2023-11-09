@@ -21,15 +21,15 @@ jobs:
         with:
           node-version: 16
           cache: 'npm'
-      - name: Npm install
-        run: npm install
-      - name: Run Make
-        run: make
-      - name: Build .deb packages
-        uses: jtdor/build-deb-action@v1
-        with:
-          buildpackage-opts: -us -uc -b
-          artifacts-dir: debian/artifacts
+    #   - name: Npm install
+    #     run: npm install
+    #   - name: Run Make
+    #     run: make
+    #   - name: Build .deb packages
+    #     uses: jtdor/build-deb-action@v1
+        # with:
+        #   buildpackage-opts: -us -uc -b
+        #   artifacts-dir: debian/artifacts
       - name: Prepare download folder
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -37,8 +37,7 @@ jobs:
           username: ${{ secrets.OPTIDATA_DOWNLOADS_USERNAME }}
           password: ${{ secrets.OPTIDATA_DOWNLOADS_PASSWORD }}
           port: ${{ secrets.OPTIDATA_DOWNLOADS_PORT }}
-          script: |
-            mkdir -p ${{ env.JITSI_ARTIFACTS_FOLDER }}
+          script: whoami && mkdir -p ${{ env.JITSI_ARTIFACTS_FOLDER }}
       - name: Upload .deb packages
         uses: garygrossgarten/github-action-scp@release
         with:
