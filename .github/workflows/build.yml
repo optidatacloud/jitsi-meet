@@ -31,7 +31,7 @@ jobs:
           buildpackage-opts: -us -uc -b
           artifacts-dir: debian/artifacts
       - name: Prepare download folder
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ env.OPTIDATA_DOWNLOADS_HOST }}
           username: ${{ secrets.OPTIDATA_DOWNLOADS_USERNAME }}
