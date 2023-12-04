@@ -37,7 +37,8 @@ jobs:
           username: ${{ secrets.OPTIDATA_DOWNLOADS_USERNAME }}
           password: ${{ secrets.OPTIDATA_DOWNLOADS_PASSWORD }}
           port: ${{ secrets.OPTIDATA_DOWNLOADS_PORT }}
-          script: mkdir -p ${{ env.JITSI_ARTIFACTS_FOLDER }}
+          script: |
+            mkdir -p ${{ env.JITSI_ARTIFACTS_FOLDER }}
       - name: Upload .deb packages
         uses: garygrossgarten/github-action-scp@release
         with:

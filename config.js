@@ -579,13 +579,13 @@ var config = {
     // enableWelcomePage: true,
 
     // Configs for welcome page.
-    // welcomePage: {
+    welcomePage: {
     //     // Whether to disable welcome page. In case it's disabled a random room
     //     // will be joined when no room is specified.
-    //     disabled: false,
+        disabled: true,
     //     // If set,landing page will redirect to this URL.
     //     customUrl: ''
-    // },
+    },
 
     // Configs for the lobby screen.
     // lobby: {
@@ -656,7 +656,7 @@ var config = {
     prejoinConfig: {
     //     // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
     //     // This replaces `prejoinPageEnabled`.
-        enabled: true,
+        enabled: false,
     //     // Hides the participant name editing field in the prejoin screen.
     //     // If requireDisplayName is also set as true, a name should still be provided through
     //     // either the jwt or the userInfo from the iframe api init object in order for this to have an effect.
@@ -1166,10 +1166,10 @@ var config = {
     // deeplinking.[ios/android].dynamicLink check:
     // https://firebase.google.com/docs/dynamic-links/create-manually
     // deeplinking: {
-    //
-    //     // The desktop deeplinking config.
+    // //
+    // //     // The desktop deeplinking config.
     //     desktop: {
-    //         appName: 'Jitsi Meet'
+    //         appName: 'Optiwork Video'
     //     },
     //     // If true, any checks to handoff to another application will be prevented
     //     // and instead the app will continue to display in the current browser.
