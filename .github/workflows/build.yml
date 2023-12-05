@@ -8,8 +8,8 @@ on:
       - v*
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-  JITSI_ARTIFACTS_FOLDER: /var/www/downloads.optidata.cloud/jitsi/artifacts
-  OPTIDATA_DOWNLOADS_HOST: 209.14.141.164
+  JITSI_ARTIFACTS_FOLDER: /data/downloads/optiwork/jitsi/artifacts
+  OPTIDATA_DOWNLOADS_HOST: downloads.optiwork.io
 jobs:
   build-push:
     name: Build
