@@ -1165,12 +1165,12 @@ var config = {
     // For information about the properties of
     // deeplinking.[ios/android].dynamicLink check:
     // https://firebase.google.com/docs/dynamic-links/create-manually
-    // deeplinking: {
-    // //
-    // //     // The desktop deeplinking config.
-    //     desktop: {
-    //         appName: 'Optiwork Video'
-    //     },
+    deeplinking: {
+    //
+    //     // The desktop deeplinking config.
+        desktop: {
+            appName: 'Optiwork Video'
+        },
     //     // If true, any checks to handoff to another application will be prevented
     //     // and instead the app will continue to display in the current browser.
     //     disabled: false,
@@ -1180,7 +1180,7 @@ var config = {
 
     //     // The ios deeplinking config.
     //     ios: {
-    //         appName: 'Jitsi Meet',
+    //         appName: 'Optiwork Video',
     //         // Specify mobile app scheme for opening the app from the mobile browser.
     //         appScheme: 'org.jitsi.meet',
     //         // Custom URL for downloading ios mobile app.
@@ -1192,11 +1192,11 @@ var config = {
     //             ibi: 'com.atlassian.JitsiMeet.ios',
     //             isi: '1165103905'
     //         }
-    //     },
+        },
 
     //     // The android deeplinking config.
     //     android: {
-    //         appName: 'Jitsi Meet',
+    //         appName: 'Optiwork Video',
     //         // Specify mobile app scheme for opening the app from the mobile browser.
     //         appScheme: 'org.jitsi.meet',
     //         // Custom URL for downloading android mobile app.
