@@ -24,7 +24,7 @@ interface ILocalRecordingManager {
     isRecordingLocally: () => boolean;
     mediaType: string;
     mixAudioStream: (stream: MediaStream) => void;
-    recorder: MediaRecorder | undefined | boolean;
+    recorder: any;
     recordingData: Blob[];
     roomName: string;
     saveRecording: (recordingData: Blob[], filename: string) => void;
@@ -293,7 +293,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
             mimeType: this.mediaType,
             videoBitsPerSecond: VIDEO_BIT_RATE
         });
-        this.recorder.addEventListener('dataavailable', e => {
+        this.recorder.addEventListener('dataavailable', (e: any) => {
             if (e.data && e.data.size > 0) {
                 this.recordingData.push(e.data);
                 this.totalSize -= e.data.size;

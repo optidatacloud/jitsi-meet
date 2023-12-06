@@ -30,31 +30,31 @@ var config = {
 
     hosts: {
         // XMPP domain.
-        domain: 'jitsi-meet.example.com',
+        domain: 'meet.dev.optidata.cloud',
 
         // When using authentication, domain for guest users.
         // anonymousdomain: 'guest.example.com',
 
         // Domain for authenticated users. Defaults to <domain>.
-        // authdomain: 'jitsi-meet.example.com',
+        // authdomain: 'meet.dev.optidata.cloud',
 
         // Focus component domain. Defaults to focus.<domain>.
-        // focus: 'focus.jitsi-meet.example.com',
+        // focus: 'focus.meet.dev.optidata.cloud',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: 'conference.' + subdomain + 'jitsi-meet.example.com',
+        muc: 'conference.' + subdomain + 'meet.dev.optidata.cloud',
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: 'https://jitsi-meet.example.com/' + subdir + 'http-bind',
+    bosh: 'https://meet.dev.optidata.cloud/' + subdir + 'http-bind',
 
     // Websocket URL (XMPP)
-    // websocket: 'wss://jitsi-meet.example.com/' + subdir + 'xmpp-websocket',
+    // websocket: 'wss://meet.dev.optidata.cloud/' + subdir + 'xmpp-websocket',
 
     // The real JID of focus participant - can be overridden here
     // Do not change username - FIXME: Make focus username configurable
     // https://github.com/jitsi/jitsi-meet/issues/7376
-    // focusUserJid: 'focus@auth.jitsi-meet.example.com',
+    // focusUserJid: 'focus@auth.meet.dev.optidata.cloud',
 
     // Options related to the bridge (colibri) data channel
     bridgeChannel: {
@@ -305,9 +305,9 @@ var config = {
     //     appKey: '<APP_KEY>', // Specify your app key here.
     //     // A URL to redirect the user to, after authenticating
     //     // by default uses:
-    //     // 'https://jitsi-meet.example.com/static/oauth.html'
+    //     // 'https://meet.dev.optidata.cloud/static/oauth.html'
     //     redirectURI:
-    //          'https://jitsi-meet.example.com/subfolder/static/oauth.html',
+    //          'https://meet.dev.optidata.cloud/subfolder/static/oauth.html',
     // },
 
     // recordingService: {
@@ -579,13 +579,13 @@ var config = {
     // enableWelcomePage: true,
 
     // Configs for welcome page.
-    // welcomePage: {
+    welcomePage: {
     //     // Whether to disable welcome page. In case it's disabled a random room
     //     // will be joined when no room is specified.
-    //     disabled: false,
+        disabled: true,
     //     // If set,landing page will redirect to this URL.
     //     customUrl: ''
-    // },
+    },
 
     // Configs for the lobby screen.
     // lobby: {
@@ -598,7 +598,7 @@ var config = {
     // Configs for the security related UI elements.
     // securityUi: {
     //     // Hides the lobby button. Replaces `hideLobbyButton`.
-    //     hideLobbyButton: false,
+        // hideLobbyButton: true,
     //     // Hides the possibility to set and enter a lobby password.
     //     disableLobbyPassword: false,
     // },
@@ -653,17 +653,17 @@ var config = {
     // enableCalendarIntegration: false,
 
     // Configs for prejoin page.
-    // prejoinConfig: {
+    prejoinConfig: {
     //     // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
     //     // This replaces `prejoinPageEnabled`.
-    //     enabled: true,
+        enabled: false,
     //     // Hides the participant name editing field in the prejoin screen.
     //     // If requireDisplayName is also set as true, a name should still be provided through
     //     // either the jwt or the userInfo from the iframe api init object in order for this to have an effect.
     //     hideDisplayName: false,
     //     // List of buttons to hide from the extra join options dropdown.
     //     hideExtraJoinButtons: ['no-audio', 'by-phone'],
-    // },
+    },
 
     // When 'true', the user cannot edit the display name.
     // (Mainly useful when used in conjunction with the JWT so the JWT name becomes read only.)
@@ -987,7 +987,7 @@ var config = {
         // The STUN servers that will be used in the peer to peer connections
         stunServers: [
 
-            // { urls: 'stun:jitsi-meet.example.com:3478' },
+            // { urls: 'stun:meet.dev.optidata.cloud:3478' },
             { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' },
         ],
 
@@ -1165,12 +1165,12 @@ var config = {
     // For information about the properties of
     // deeplinking.[ios/android].dynamicLink check:
     // https://firebase.google.com/docs/dynamic-links/create-manually
-    // deeplinking: {
+    deeplinking: {
     //
     //     // The desktop deeplinking config.
-    //     desktop: {
-    //         appName: 'Jitsi Meet'
-    //     },
+        desktop: {
+            appName: 'Optiwork Video'
+        },
     //     // If true, any checks to handoff to another application will be prevented
     //     // and instead the app will continue to display in the current browser.
     //     disabled: false,
@@ -1180,7 +1180,7 @@ var config = {
 
     //     // The ios deeplinking config.
     //     ios: {
-    //         appName: 'Jitsi Meet',
+    //         appName: 'Optiwork Video',
     //         // Specify mobile app scheme for opening the app from the mobile browser.
     //         appScheme: 'org.jitsi.meet',
     //         // Custom URL for downloading ios mobile app.
@@ -1192,11 +1192,11 @@ var config = {
     //             ibi: 'com.atlassian.JitsiMeet.ios',
     //             isi: '1165103905'
     //         }
-    //     },
+        },
 
     //     // The android deeplinking config.
     //     android: {
-    //         appName: 'Jitsi Meet',
+    //         appName: 'Optiwork Video',
     //         // Specify mobile app scheme for opening the app from the mobile browser.
     //         appScheme: 'org.jitsi.meet',
     //         // Custom URL for downloading android mobile app.
@@ -1377,7 +1377,7 @@ var config = {
     // The URL of the moderated rooms microservice, if available. If it
     // is present, a link to the service will be rendered on the welcome page,
     // otherwise the app doesn't render it.
-    // moderatedRoomServiceUrl: 'https://moderated.jitsi-meet.example.com',
+    // moderatedRoomServiceUrl: 'https://moderated.meet.dev.optidata.cloud',
 
     // If true, tile view will not be enabled automatically when the participants count threshold is reached.
     // disableTileView: true,
