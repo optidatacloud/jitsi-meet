@@ -174,7 +174,7 @@ var config = {
     // startAudioOnly: false,
 
     // Every participant after the Nth will start audio muted.
-    // startAudioMuted: 10,
+    startAudioMuted: 5,
 
     // Start calls with audio muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
@@ -216,7 +216,7 @@ var config = {
     // Video
 
     // Sets the preferred resolution (height) for local video. Defaults to 720.
-    // resolution: 720,
+    resolution: 360,
 
     // Specifies whether the raised hand will hide when someone becomes a dominant speaker or not
     // disableRemoveRaisedHandOnFocus: false,
@@ -253,28 +253,28 @@ var config = {
 
     // How many participants while in the tile view mode, before the receiving video quality is reduced from HD to SD.
     // Use -1 to disable.
-    // maxFullResolutionParticipants: 2,
+    maxFullResolutionParticipants: -1,
 
     // w3c spec-compliant video constraints to use for video capture. Currently
     // used by browsers that return true from lib-jitsi-meet's
     // util#browser#usesNewGumFlow. The constraints are independent from
     // this config's resolution value. Defaults to requesting an ideal
     // resolution of 720p.
-    // constraints: {
-    //     video: {
-    //         height: {
-    //             ideal: 720,
-    //             max: 720,
-    //             min: 240,
-    //         },
-    //     },
-    // },
+    constraints: {
+        video: {
+            height: {
+                ideal: 360,
+                max: 360,
+                min: 240,
+            },
+        },
+    },
 
     // Enable / disable simulcast support.
     // disableSimulcast: false,
 
     // Every participant after the Nth will start video muted.
-    // startVideoMuted: 10,
+    startVideoMuted: 5,
 
     // Start calls with video muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
@@ -283,10 +283,10 @@ var config = {
     // Desktop sharing
 
     // Optional desktop sharing frame rate options. Default value: min:5, max:5.
-    // desktopSharingFrameRate: {
-    //     min: 5,
-    //     max: 5,
-    // },
+    desktopSharingFrameRate: {
+        min: 4,
+        max: 5,
+    },
 
     // This option has been deprecated since it is no longer supported as per the w3c spec.
     // https://w3c.github.io/mediacapture-screen-share/#dom-mediadevices-getdisplaymedia. If the user has not
@@ -333,30 +333,31 @@ var config = {
     // fileRecordingsServiceSharingEnabled: false,
 
     // Local recording configuration.
-    // localRecording: {
-    //     // Whether to disable local recording or not.
-    //     disable: false,
+    localRecording: {
+        // Whether to disable local recording or not.
+        disable: false,
 
-    //     // Whether to notify all participants when a participant is recording locally.
-    //     notifyAllParticipants: false,
+        // Whether to notify all participants when a participant is recording locally.
+        notifyAllParticipants: true,
 
-    //     // Whether to disable the self recording feature (only local participant streams).
-    //     disableSelfRecording: false,
-    // },
+        // Whether to disable the self recording feature (only local participant streams).
+        disableSelfRecording: false,
+    },
 
     // Customize the Live Streaming dialog. Can be modified for a non-YouTube provider.
-    // liveStreaming: {
-    //    // Whether to enable live streaming or not.
-    //    enabled: false,
-    //    // Terms link
-    //    termsLink: 'https://www.youtube.com/t/terms',
-    //    // Data privacy link
-    //    dataPrivacyLink: 'https://policies.google.com/privacy',
-    //    // RegExp string that validates the stream key input field
-    //    validatorRegExpString: '^(?:[a-zA-Z0-9]{4}(?:-(?!$)|$)){4}',
-    //    // Documentation reference for the live streaming feature.
-    //    helpLink: 'https://jitsi.org/live'
-    // },
+    liveStreaming: {
+        // Whether to enable live streaming or not.
+        enabled: false,
+
+        // // Terms link
+        // termsLink: 'https://www.youtube.com/t/terms',
+        // // Data privacy link
+        // dataPrivacyLink: 'https://policies.google.com/privacy',
+        // // RegExp string that validates the stream key input field
+        // validatorRegExpString: '^(?:[a-zA-Z0-9]{4}(?:-(?!$)|$)){4}',
+        // // Documentation reference for the live streaming feature.
+        helpLink: 'https://www.optidata.cloud/solucoes/drive-e-office-integrados/'
+    },
 
     // DEPRECATED. Use liveStreaming.enabled instead.
     // liveStreamingEnabled: false,
@@ -426,68 +427,66 @@ var config = {
     // startLastN: 1,
 
     // Specify the settings for video quality optimizations on the client.
-    // videoQuality: {
-    //
-    //    // Provides a way to set the codec preference on desktop based endpoints.
-    //    codecPreferenceOrder: [ 'VP9', 'VP8', 'H264' ],
-    //
-    //    // Provides a way to configure the maximum bitrates that will be enforced on the simulcast streams for
-    //    // video tracks. The keys in the object represent the type of the stream (LD, SD or HD) and the values
-    //    // are the max.bitrates to be set on that particular type of stream. The actual send may vary based on
-    //    // the available bandwidth calculated by the browser, but it will be capped by the values specified here.
-    //    // This is currently not implemented on app based clients on mobile.
-    //    maxBitratesVideo: {
-    //          H264: {
-    //              low: 200000,
-    //              standard: 500000,
-    //              high: 1500000,
-    //          },
-    //          VP8 : {
-    //              low: 200000,
-    //              standard: 500000,
-    //              high: 1500000,
-    //          },
-    //          VP9: {
-    //              low: 100000,
-    //              standard: 300000,
-    //              high: 1200000,
-    //          },
-    //    },
-    //
-    //    // The options can be used to override default thresholds of video thumbnail heights corresponding to
-    //    // the video quality levels used in the application. At the time of this writing the allowed levels are:
-    //    //     'low' - for the low quality level (180p at the time of this writing)
-    //    //     'standard' - for the medium quality level (360p)
-    //    //     'high' - for the high quality level (720p)
-    //    // The keys should be positive numbers which represent the minimal thumbnail height for the quality level.
-    //    //
-    //    // With the default config value below the application will use 'low' quality until the thumbnails are
-    //    // at least 360 pixels tall. If the thumbnail height reaches 720 pixels then the application will switch to
-    //    // the high quality.
-    //    minHeightForQualityLvl: {
-    //        360: 'standard',
-    //        720: 'high',
-    //    },
-    //
-    //    // Provides a way to set the codec preference on mobile devices, both on RN and mobile browser based endpoint
-    //    mobileCodecPreferenceOrder: [ 'VP8', 'VP9', 'H264' ],
-    //
-    //    // DEPRECATED! Use `codecPreferenceOrder/mobileCodecPreferenceOrder` instead.
-    //    // Provides a way to prevent a video codec from being negotiated on the JVB connection. The codec specified
-    //    // here will be removed from the list of codecs present in the SDP answer generated by the client. If the
-    //    // same codec is specified for both the disabled and preferred option, the disable settings will prevail.
-    //    // Note that 'VP8' cannot be disabled since it's a mandatory codec, the setting will be ignored in this case.
-    //    disabledCodec: 'H264',
-    //
-    //    // DEPRECATED! Use `codecPreferenceOrder/mobileCodecPreferenceOrder` instead.
-    //    // Provides a way to set a preferred video codec for the JVB connection. If 'H264' is specified here,
-    //    // simulcast will be automatically disabled since JVB doesn't support H264 simulcast yet. This will only
-    //    // rearrange the the preference order of the codecs in the SDP answer generated by the browser only if the
-    //    // preferred codec specified here is present. Please ensure that the JVB offers the specified codec for this
-    //    // to take effect.
-    //    preferredCodec: 'VP8',
-    //
-    // },
+    videoQuality: {
+        // Provides a way to set the codec preference on desktop based endpoints.
+        codecPreferenceOrder: [ 'VP9', 'VP8', 'H264' ],
+
+        // Provides a way to configure the maximum bitrates that will be enforced on the simulcast streams for
+        // video tracks. The keys in the object represent the type of the stream (LD, SD or HD) and the values
+        // are the max.bitrates to be set on that particular type of stream. The actual send may vary based on
+        // the available bandwidth calculated by the browser, but it will be capped by the values specified here.
+        // This is currently not implemented on app based clients on mobile.
+        maxBitratesVideo: {
+            H264: {
+                low: 200000,
+                standard: 500000,
+                high: 1000000,
+            },
+            VP8: {
+                low: 200000,
+                standard: 500000,
+                high: 1000000,
+            },
+            VP9: {
+                low: 100000,
+                standard: 300000,
+                high: 800000,
+            },
+        },
+
+        // The options can be used to override default thresholds of video thumbnail heights corresponding to
+        // the video quality levels used in the application. At the time of this writing the allowed levels are:
+        //     'low' - for the low quality level (180p at the time of this writing)
+        //     'standard' - for the medium quality level (360p)
+        //     'high' - for the high quality level (720p)
+        // The keys should be positive numbers which represent the minimal thumbnail height for the quality level.
+        //
+        // With the default config value below the application will use 'low' quality until the thumbnails are
+        // at least 360 pixels tall. If the thumbnail height reaches 720 pixels then the application will switch to
+        // the high quality.
+        minHeightForQualityLvl: {
+            240: 'standard',
+            360: 'high',
+        },
+
+        // Provides a way to set the codec preference on mobile devices, both on RN and mobile browser based endpoint
+        mobileCodecPreferenceOrder: [ 'VP8', 'VP9', 'H264' ],
+
+        // // DEPRECATED! Use `codecPreferenceOrder/mobileCodecPreferenceOrder` instead.
+        // // Provides a way to prevent a video codec from being negotiated on the JVB connection. The codec specified
+        // // here will be removed from the list of codecs present in the SDP answer generated by the client. If the
+        // // same codec is specified for both the disabled and preferred option, the disable settings will prevail.
+        // // Note that 'VP8' cannot be disabled since it's a mandatory codec, the setting will be ignored in this case.
+        // disabledCodec: 'H264',
+
+        // DEPRECATED! Use `codecPreferenceOrder/mobileCodecPreferenceOrder` instead.
+        // Provides a way to set a preferred video codec for the JVB connection. If 'H264' is specified here,
+        // simulcast will be automatically disabled since JVB doesn't support H264 simulcast yet. This will only
+        // rearrange the the preference order of the codecs in the SDP answer generated by the browser only if the
+        // preferred codec specified here is present. Please ensure that the JVB offers the specified codec for this
+        // to take effect.
+        preferredCodec: 'VP8',
+    },
 
     // Notification timeouts
     // notificationTimeouts: {
@@ -580,11 +579,12 @@ var config = {
 
     // Configs for welcome page.
     welcomePage: {
-    //     // Whether to disable welcome page. In case it's disabled a random room
-    //     // will be joined when no room is specified.
+        // Whether to disable welcome page. In case it's disabled a random room
+        // will be joined when no room is specified.
         disabled: true,
-    //     // If set,landing page will redirect to this URL.
-    //     customUrl: ''
+
+        // If set,landing page will redirect to this URL.
+        // customUrl: ''
     },
 
     // Configs for the lobby screen.
@@ -623,7 +623,7 @@ var config = {
     // defaultLocalDisplayName: 'me',
 
     // Default remote name to be displayed
-    // defaultRemoteDisplayName: 'Fellow Jitster',
+    defaultRemoteDisplayName: 'Optiwork User',
 
     // Hides the display name from the participant thumbnail
     // hideDisplayName: false,
@@ -654,15 +654,17 @@ var config = {
 
     // Configs for prejoin page.
     prejoinConfig: {
-    //     // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
-    //     // This replaces `prejoinPageEnabled`.
+        // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
+        // This replaces `prejoinPageEnabled`.
         enabled: false,
-    //     // Hides the participant name editing field in the prejoin screen.
-    //     // If requireDisplayName is also set as true, a name should still be provided through
-    //     // either the jwt or the userInfo from the iframe api init object in order for this to have an effect.
-    //     hideDisplayName: false,
-    //     // List of buttons to hide from the extra join options dropdown.
-    //     hideExtraJoinButtons: ['no-audio', 'by-phone'],
+
+        // Hides the participant name editing field in the prejoin screen.
+        // If requireDisplayName is also set as true, a name should still be provided through
+        // either the jwt or the userInfo from the iframe api init object in order for this to have an effect.
+        // hideDisplayName: false,
+
+        // List of buttons to hide from the extra join options dropdown.
+        // hideExtraJoinButtons: ['no-audio', 'by-phone'],
     },
 
     // When 'true', the user cannot edit the display name.
