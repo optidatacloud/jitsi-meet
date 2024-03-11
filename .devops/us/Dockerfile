@@ -19,8 +19,8 @@ FROM nginx:1.25.4-alpine AS web
 WORKDIR /srv/jitsi-meet
 
 # NGINX
-COPY ./devops/nginx-jitsi.conf /etc/nginx/sites-available/jitsi.conf
-COPY ./devops/nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY .devops/nginx-jitsi.conf /etc/nginx/sites-available/jitsi.conf
+COPY .devops/nginx-default.conf /etc/nginx/conf.d/default.conf
 
 RUN mkdir /etc/nginx/sites-enabled
 
