@@ -14,17 +14,22 @@ RUN npm ci
 
 RUN make
 
-FROM nginx:1.25.4-alpine AS web
+#FROM nginx:1.25.4-alpine AS web
+FROM nginx:1.24.0-bullseye AS web
+
+RUN apt-get update && \
+    apt-get install -y dnsutils cron nginx-extras socat curl jq apt-transport-https apt-utils ca-certificates gnupg wget && \
+    rm -f /etc/nginx/conf.d/default.conf
 
 WORKDIR /srv/jitsi-meet
 
 # NGINX
-COPY .devops/nginx-jitsi.conf /etc/nginx/sites-available/jitsi.conf
-COPY .devops/nginx-default.conf /etc/nginx/conf.d/default.conf
+#COPY .devops/nginx-jitsi.conf /etc/nginx/sites-available/jitsi.conf
+#COPY .devops/nginx-default.conf /etc/nginx/conf.d/default.conf
 
-RUN mkdir /etc/nginx/sites-enabled
+#RUN mkdir /etc/nginx/sites-enabled
 
-RUN ln -s /etc/nginx/sites-available/jitsi.conf /etc/nginx/sites-enabled/jitsi.conf
+#RUN ln -s /etc/nginx/sites-available/jitsi.conf /etc/nginx/sites-enabled/jitsi.conf
 
 COPY --from=builder /jitsi-meet/*.html /jitsi-meet/*.js /jitsi-meet/*.txt /jitsi-meet/manifest.json ./
 COPY --from=builder /jitsi-meet/css/ ./css
