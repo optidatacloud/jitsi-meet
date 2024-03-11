@@ -11,9 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         details: [
-          {region: br, dockerfile: ./devops/br/Dockerfile}, 
-          {region: us, dockerfile: ./devops/us/Dockerfile}, 
-          {region: eu, dockerfile: ./devops/eu/Dockerfile}]
+          {region: br, dockerfile: ./.devops/br/Dockerfile}, 
+          {region: us, dockerfile: ./.devops/us/Dockerfile}, 
+          {region: eu, dockerfile: ./.devops/eu/Dockerfile}]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

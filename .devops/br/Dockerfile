@@ -8,7 +8,7 @@ WORKDIR /jitsi-meet
 
 COPY . .
 
-COPY ./devops/br/config.js .
+COPY .devops/br/config.js .
 
 RUN npm ci
 
