@@ -8,23 +8,15 @@ WORKDIR /jitsi-meet
 
 COPY . .
 
-COPY .devops/us/config.js .
+COPY .devops/us/config.js /config/config.js
 
 RUN npm ci
 
 RUN make
 
-FROM nginx:1.25.4-alpine AS web
+FROM jitsi/web:stable-9258 AS base
 
-WORKDIR /srv/jitsi-meet
-
-# NGINX
-COPY .devops/nginx-jitsi.conf /etc/nginx/sites-available/jitsi.conf
-COPY .devops/nginx-default.conf /etc/nginx/conf.d/default.conf
-
-RUN mkdir /etc/nginx/sites-enabled
-
-RUN ln -s /etc/nginx/sites-available/jitsi.conf /etc/nginx/sites-enabled/jitsi.conf
+WORKDIR /usr/share/jitsi-meet
 
 COPY --from=builder /jitsi-meet/*.html /jitsi-meet/*.js /jitsi-meet/*.txt /jitsi-meet/manifest.json ./
 COPY --from=builder /jitsi-meet/css/ ./css
@@ -33,3 +25,4 @@ COPY --from=builder /jitsi-meet/lang/ ./lang
 COPY --from=builder /jitsi-meet/libs/ ./libs
 COPY --from=builder /jitsi-meet/static/ ./static
 COPY --from=builder /jitsi-meet/sounds/ ./sounds
+RUN cp /usr/share/jitsi-meet/lang/countries-en.json /usr/share/jitsi-meet/lang/countries.json
