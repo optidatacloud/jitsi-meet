@@ -8,8 +8,6 @@ WORKDIR /jitsi-meet
 
 COPY . .
 
-COPY .devops/br/config.js /config/config.js
-
 RUN npm ci
 
 RUN make
@@ -25,4 +23,6 @@ COPY --from=builder /jitsi-meet/lang/ ./lang
 COPY --from=builder /jitsi-meet/libs/ ./libs
 COPY --from=builder /jitsi-meet/static/ ./static
 COPY --from=builder /jitsi-meet/sounds/ ./sounds
-RUN cp /usr/share/jitsi-meet/lang/countries-en.json /usr/share/jitsi-meet/lang/countries.json
+RUN cp /usr/share/jitsi-meet/lang/countries-ptBR.json /usr/share/jitsi-meet/lang/countries.json
+
+COPY .devops/br/config.js /config/config.js
